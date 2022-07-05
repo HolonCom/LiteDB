@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29609.76
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteDB", "LiteDB\LiteDB.csproj", "{9497DA19-1FCA-4C2E-A1AB-8DFAACBC76E1}"
 EndProject
@@ -12,6 +12,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteDB.Benchmarks", "LiteDB.Benchmarks\LiteDB.Benchmarks.csproj", "{DF9C82C1-446F-458A-AA50-78E58BA17273}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteDB.Stress", "LiteDB.Stress\LiteDB.Stress.csproj", "{FFBC5669-DA32-4907-8793-7B414279DA3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemLeakReproduction", "MemLeakReproduction\MemLeakReproduction.csproj", "{7EA68CCC-90D9-4711-B81C-2D9E2DAD5AB4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hangfire.LiteDB", "..\Hangfire.LiteDB\src\Hangfire.LiteDB\Hangfire.LiteDB.csproj", "{F32E1A20-F1F6-442F-B334-C33E9B495B55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{FFBC5669-DA32-4907-8793-7B414279DA3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFBC5669-DA32-4907-8793-7B414279DA3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFBC5669-DA32-4907-8793-7B414279DA3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EA68CCC-90D9-4711-B81C-2D9E2DAD5AB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EA68CCC-90D9-4711-B81C-2D9E2DAD5AB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EA68CCC-90D9-4711-B81C-2D9E2DAD5AB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EA68CCC-90D9-4711-B81C-2D9E2DAD5AB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F32E1A20-F1F6-442F-B334-C33E9B495B55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F32E1A20-F1F6-442F-B334-C33E9B495B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F32E1A20-F1F6-442F-B334-C33E9B495B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F32E1A20-F1F6-442F-B334-C33E9B495B55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
