@@ -19,8 +19,8 @@ namespace LiteDB.Engine
             {
                 var snapshot = transaction.CreateSnapshot(LockMode.Write, collection, false);
                 var collectionPage = snapshot.CollectionPage;
-                var indexer = new IndexService(snapshot, _header.Pragmas.Collation);
-                var data = new DataService(snapshot);
+                IndexService indexer = null;
+                DataService data = null;
                 var count = 0;
 
                 if (collectionPage == null) return 0;
@@ -29,6 +29,12 @@ namespace LiteDB.Engine
 
                 foreach (var doc in docs)
                 {
+                    if (data == null)
+                    {
+                        indexer = new IndexService(snapshot, _header.Pragmas.Collation);
+                        data = new DataService(snapshot);
+                    }
+
                     transaction.Safepoint();
 
                     if (this.UpdateDocument(snapshot, collectionPage, doc, indexer, data))

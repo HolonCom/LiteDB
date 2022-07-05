@@ -20,14 +20,22 @@ namespace LiteDB.Engine
             return this.AutoTransaction(transaction =>
             {
                 var snapshot = transaction.CreateSnapshot(LockMode.Write, collection, true);
+                IndexService indexer = null;
+                DataService data = null;
                 var count = 0;
-                var indexer = new IndexService(snapshot, _header.Pragmas.Collation);
-                var data = new DataService(snapshot);
+
+                if (snapshot.CollectionPage == null) return 0;
 
                 LOG($"insert `{collection}`", "COMMAND");
 
                 foreach (var doc in docs)
                 {
+                    if (indexer == null)
+                    {
+                        indexer = new IndexService(snapshot, _header.Pragmas.Collation);
+                        data = new DataService(snapshot);
+                    }
+
                     transaction.Safepoint();
 
                     this.InsertDocument(snapshot, doc, autoId, indexer, data);

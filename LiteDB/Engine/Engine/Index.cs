@@ -29,8 +29,8 @@ namespace LiteDB.Engine
             {
                 var snapshot = transaction.CreateSnapshot(LockMode.Write, collection, true);
                 var collectionPage = snapshot.CollectionPage;
-                var indexer = new IndexService(snapshot, _header.Pragmas.Collation);
-                var data = new DataService(snapshot);
+                IndexService indexer = null;
+                DataService data = null;
 
                 // check if index already exists
                 var current = collectionPage.GetCollectionIndex(name);
@@ -47,12 +47,17 @@ namespace LiteDB.Engine
                 LOG($"create index `{collection}.{name}`", "COMMAND");
 
                 // create index head
+                indexer = new IndexService(snapshot, _header.Pragmas.Collation);
                 var index = indexer.CreateIndex(name, expression.Source, unique);
                 var count = 0u;
 
                 // read all objects (read from PK index)
                 foreach (var pkNode in new IndexAll("_id", LiteDB.Query.Ascending).Run(collectionPage, indexer))
                 {
+                    if (data == null)
+                    {
+                        data = new DataService(snapshot);
+                    }
                     using (var reader = new BufferReader(data.Read(pkNode.DataBlock)))
                     {
                         var doc = reader.ReadDocument(expression.Fields);
@@ -105,24 +110,24 @@ namespace LiteDB.Engine
             return this.AutoTransaction(transaction =>
             {
                 var snapshot = transaction.CreateSnapshot(LockMode.Write, collection, false);
-                var col = snapshot.CollectionPage;
-                var indexer = new IndexService(snapshot, _header.Pragmas.Collation);
-            
+                var collectionPage = snapshot.CollectionPage;
+
                 // no collection, no index
-                if (col == null) return false;
-            
+                if (collectionPage == null) return false;
+
                 // search for index reference
-                var index = col.GetCollectionIndex(name);
-            
+                var index = collectionPage.GetCollectionIndex(name);
+
                 // no index, no drop
                 if (index == null) return false;
 
                 // delete all data pages + indexes pages
+                var indexer = new IndexService(snapshot, _header.Pragmas.Collation);
                 indexer.DropIndex(index);
 
                 // remove index entry in collection page
                 snapshot.CollectionPage.DeleteCollectionIndex(name);
-            
+
                 return true;
             });
         }

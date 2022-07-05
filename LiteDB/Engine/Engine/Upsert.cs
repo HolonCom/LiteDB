@@ -20,14 +20,22 @@ namespace LiteDB.Engine
             {
                 var snapshot = transaction.CreateSnapshot(LockMode.Write, collection, true);
                 var collectionPage = snapshot.CollectionPage;
-                var indexer = new IndexService(snapshot, _header.Pragmas.Collation);
-                var data = new DataService(snapshot);
+                IndexService indexer = null;
+                DataService data = null;
                 var count = 0;
+
+                if (collectionPage == null) return 0;
 
                 LOG($"upsert `{collection}`", "COMMAND");
 
                 foreach (var doc in docs)
                 {
+                    if (data == null)
+                    {
+                        indexer = new IndexService(snapshot, _header.Pragmas.Collation);
+                        data = new DataService(snapshot);
+                    }
+
                     transaction.Safepoint();
 
                     // first try update document (if exists _id), if not found, do insert

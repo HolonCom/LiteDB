@@ -19,8 +19,8 @@ namespace LiteDB.Engine
             {
                 var snapshot = transaction.CreateSnapshot(LockMode.Write, collection, false);
                 var collectionPage = snapshot.CollectionPage;
-                var data = new DataService(snapshot);
-                var indexer = new IndexService(snapshot, _header.Pragmas.Collation);
+                IndexService indexer = null;
+                DataService data = null;
 
                 if (collectionPage == null) return 0;
 
@@ -31,6 +31,12 @@ namespace LiteDB.Engine
 
                 foreach (var id in ids)
                 {
+                    if (indexer == null)
+                    {
+                        indexer = new IndexService(snapshot, _header.Pragmas.Collation);
+                        data = new DataService(snapshot);
+                    }
+
                     var pkNode = indexer.Find(pk, id, false, LiteDB.Query.Ascending);
 
                     // if pk not found, continue
